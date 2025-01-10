@@ -1,0 +1,67 @@
+{
+  "errors": [],
+  "accounts": [
+    {
+      "org": {
+        "domain": "beta-bridge.simplefin.org",
+        "sfin-url": "https://beta-bridge.simplefin.org/simplefin",
+        "name": "SimpleFIN Demo",
+        "url": "https://beta-bridge.simplefin.org",
+        "id": "simplefin.demoorg"
+      },
+      "id": "Demo Savings",
+      "name": "SimpleFIN Savings",
+      "currency": "USD",
+      "balance": "114125.50",
+      "available-balance": "114125.50",
+      "balance-date": 1736553600,
+      "transactions": [
+        {
+          "id": "1736496000",
+          "posted": 1736496000,
+          "amount": "-50.00",
+          "description": "Fishing bait",
+          "payee": "John's Fishin Shack",
+          "memo": "JOHNS FISHIN SHACK BAIT"
+        },
+        {
+          "id": "1736524800",
+          "posted": 1736524800,
+          "amount": "-90.00",
+          "description": "Grocery store",
+          "payee": "Grocery store",
+          "memo": "LOCAL GROCER STORE #1133"
+        },
+        {
+          "id": "1736582400",
+          "posted": 1736582400,
+          "amount": "-55.50",
+          "description": "Fishing bait",
+          "payee": "John's Fishin Shack",
+          "memo": "JOHNS FISHIN SHACK BAIT"
+        },
+        {
+          "id": "1736611200",
+          "posted": 1736611200,
+          "amount": "-85.50",
+          "description": "Grocery store",
+          "payee": "Grocery store",
+          "memo": "LOCAL GROCER STORE #1133"
+        }
+      ],
+      "holdings": [
+        {
+          "id": "25bc4910-4cb4-437b-9924-ee98003651c5",
+          "created": 345427200,
+          "cost_basis": "55.00",
+          "currency": "USD",
+          "description": "Shares of Apple",
+          "market_value": "105884.8",
+          "purchase_price": "0.10",
+          "shares": "550.0",
+          "symbol": "AAPL"
+        }
+      ]
+    }
+  ]
+}

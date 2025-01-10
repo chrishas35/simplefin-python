@@ -1,0 +1,39 @@
+{
+  "errors": [],
+  "accounts": [
+    {
+      "org": {
+        "domain": "beta-bridge.simplefin.org",
+        "sfin-url": "https://beta-bridge.simplefin.org/simplefin",
+        "name": "SimpleFIN Demo",
+        "url": "https://beta-bridge.simplefin.org",
+        "id": "simplefin.demoorg"
+      },
+      "id": "Demo Savings",
+      "name": "SimpleFIN Savings",
+      "currency": "USD",
+      "balance": "114125.50",
+      "available-balance": "114125.50",
+      "balance-date": 1736553600,
+      "transactions": [],
+      "holdings": []
+    },
+    {
+      "org": {
+        "domain": "beta-bridge.simplefin.org",
+        "sfin-url": "https://beta-bridge.simplefin.org/simplefin",
+        "name": "SimpleFIN Demo",
+        "url": "https://beta-bridge.simplefin.org",
+        "id": "simplefin.demoorg"
+      },
+      "id": "Demo Checking",
+      "name": "SimpleFIN Checking",
+      "currency": "USD",
+      "balance": "24302.22",
+      "available-balance": "24302.22",
+      "balance-date": 1736553600,
+      "transactions": [],
+      "holdings": []
+    }
+  ]
+}
