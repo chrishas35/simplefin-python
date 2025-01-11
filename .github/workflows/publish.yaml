@@ -93,7 +93,7 @@ jobs:
           --repo "$GITHUB_REPOSITORY"
 
   publish-to-testpypi:
-    name: Publish to PyPI-Test
+    name: Publish to TestPyPI
     runs-on: ubuntu-24.04
     needs: [build]
     environment:
