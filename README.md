@@ -2,7 +2,7 @@
 
 ## Installation
 
-`pip install simplefin-python`
+`pip install simplefin`
 
 ## Command line interface
 
@@ -36,7 +36,7 @@ Examples below leverage the SimpleFIN Bridge Demo Access URL of `https://demo:de
 
 #### Get transactions for an account
 
-`simplefin transactions ACCOUNT_ID [--format FORMAT]`
+`simplefin transactions ACCOUNT_ID [--format FORMAT] [--lookback-days INTEGER]`
 
     ❯ simplefin transactions "Demo Savings"
             Transactions for Demo Savings
