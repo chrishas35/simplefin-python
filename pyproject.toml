@@ -1,6 +1,6 @@
 [project]
+dynamic=["version"]
 name = "simplefin"
-version = "0.2.dev"
 description = "Add your description here"
 readme = "README.md"
 authors = [
@@ -17,7 +17,7 @@ dependencies = [
 simplefin = "simplefin:cli"
 
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
 
 [dependency-groups]
@@ -26,3 +26,7 @@ dev = [
     "pytest-httpx>=0.35.0",
     "ruff>=0.9.0",
 ]
+
+[tool.hatch.version]
+source = "vcs"
+raw-options = { local_scheme = "no-local-version" }
