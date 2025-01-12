@@ -1,4 +1,5 @@
 .env
+.envrc
 
 # Python-generated files
 __pycache__/

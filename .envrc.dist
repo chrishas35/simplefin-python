@@ -1,0 +1,6 @@
+watch_file .env uv.lock pyproject.toml
+
+dotenv_if_exists
+
+uv sync
+source .venv/bin/activate
