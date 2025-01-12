@@ -1,14 +1,18 @@
 import datetime
 import json
 import os
-from datetime import date
 
+# from datetime import date
 import click
 from rich.console import Console
 from rich.pretty import pprint
 from rich.table import Table
 
 from simplefin.client import SimpleFINClient
+
+
+def epoch_to_datetime(epoch: int) -> datetime:
+    return datetime.datetime.fromtimestamp(epoch, tz=datetime.timezone.utc)
 
 
 class DateTimeEncoder(json.JSONEncoder):
@@ -78,24 +82,30 @@ def accounts() -> None:
 )
 def transactions(account_id: str, format: str, lookback_days: int) -> None:
     c = SimpleFINClient(access_url=os.getenv("SIMPLEFIN_ACCESS_URL"))
-    start_dt = date.today() - datetime.timedelta(days=lookback_days)
-    transactions = c.get_transactions(account_id, start_dt)
+    start_dt = datetime.date.today() - datetime.timedelta(days=lookback_days)
+    resp = c.get_transactions(account_id, start_dt)
+
+    console = Console()
 
     if format == "json":
-        console = Console()
-        console.print(json.dumps(transactions, indent=4, cls=DateTimeEncoder))
+        console.print(json.dumps(resp, indent=4))
     else:
+        if len(resp["accounts"]) == 0:
+            console.print("No transactions found")
+            return
+
         table = Table(title=f"Transactions for {account_id}")
         table.add_column("Date")
         table.add_column("Payee")
         table.add_column("Amount")
 
-        for txn in transactions:
+        for txn in resp["accounts"][0]["transactions"]:
             table.add_row(
-                txn["posted"].strftime("%d %b %Y"), txn["payee"], str(txn["amount"])
+                epoch_to_datetime(txn["posted"]).strftime("%d %b %Y"),
+                txn["payee"],
+                str(txn["amount"]),
             )
 
-        console = Console()
         console.print(table)
 
 
