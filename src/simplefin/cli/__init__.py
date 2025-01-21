@@ -42,14 +42,14 @@ def setup() -> None:
 @click.option(
     "--format",
     type=click.Choice(["json", "table"], case_sensitive=False),
-    default='table',
-    help='Specify output format'
+    default="table",
+    help="Specify output format",
 )
 def accounts(format: str) -> None:
     c = SimpleFINClient(access_url=os.getenv("SIMPLEFIN_ACCESS_URL"))
     accounts = c.get_accounts()
 
-    if format == 'json':
+    if format == "json":
         console = Console()
         console.print(json.dumps(accounts, indent=4, cls=DateTimeEncoder))
     else:
@@ -103,8 +103,7 @@ def transactions(account_id: str, format: str, lookback_days: int) -> None:
 
         for txn in transactions:
             table.add_row(
-                txn["posted"].strftime(
-                    "%d %b %Y"), txn["payee"], str(txn["amount"])
+                txn["posted"].strftime("%d %b %Y"), txn["payee"], str(txn["amount"])
             )
 
         console = Console()
