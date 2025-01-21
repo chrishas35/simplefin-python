@@ -39,25 +39,36 @@ def setup() -> None:
 
 
 @cli.command()
-def accounts() -> None:
+@click.option(
+    "--format",
+    type=click.Choice(["json", "table"], case_sensitive=False),
+    default='table',
+    help='Specify output format'
+)
+def accounts(format: str) -> None:
     c = SimpleFINClient(access_url=os.getenv("SIMPLEFIN_ACCESS_URL"))
     accounts = c.get_accounts()
-    table = Table(title="SimpleFIN Accounts")
-    table.add_column("Institution")
-    table.add_column("Account")
-    table.add_column("Balance")
-    table.add_column("Account ID")
 
-    for account in accounts:
-        table.add_row(
-            account["org"]["name"],
-            account["name"],
-            str(account["balance"]),
-            account["id"],
-        )
+    if format == 'json':
+        console = Console()
+        console.print(json.dumps(accounts, indent=4, cls=DateTimeEncoder))
+    else:
+        table = Table(title="SimpleFIN Accounts")
+        table.add_column("Institution")
+        table.add_column("Account")
+        table.add_column("Balance")
+        table.add_column("Account ID")
 
-    console = Console()
-    console.print(table)
+        for account in accounts:
+            table.add_row(
+                account["org"]["name"],
+                account["name"],
+                str(account["balance"]),
+                account["id"],
+            )
+
+        console = Console()
+        console.print(table)
 
 
 # TODO: Add date range option
@@ -92,7 +103,8 @@ def transactions(account_id: str, format: str, lookback_days: int) -> None:
 
         for txn in transactions:
             table.add_row(
-                txn["posted"].strftime("%d %b %Y"), txn["payee"], str(txn["amount"])
+                txn["posted"].strftime(
+                    "%d %b %Y"), txn["payee"], str(txn["amount"])
             )
 
         console = Console()
