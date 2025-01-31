@@ -1,0 +1,25 @@
+# Release drafter configuration https://github.com/release-drafter/release-drafter#configuration
+
+name-template: "$NEXT_MINOR_VERSION"
+tag-template: "$NEXT_MINOR_VERSION"
+
+categories:
+  - title: "Breaking Changes"
+    labels: [breaking]
+  - title: "Features"
+    labels: [enhancement, feature]
+  - title: "Fixes & Refactoring"
+    labels: [bug, refactoring, bugfix, fix]
+  - title: "Build System & CI/CD"
+    labels: [build, ci, testing]
+  - title: "Documentation"
+    labels: [documentation]
+  - title: "Dependency Updates"
+    labels: [dependencies]
+
+template: |
+  ## What's Changed
+
+  $CHANGES
+
+  **Full Changelog**: https://github.com/$OWNER/$REPOSITORY/compare/$PREVIOUS_TAG...$NEXT_MINOR_VERSION
