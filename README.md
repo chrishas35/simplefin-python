@@ -25,66 +25,95 @@ Examples below leverage the SimpleFIN Bridge Demo Access URL of `https://demo:de
 
 #### Get accounts
 
-    ❯ simplefin accounts
-                            SimpleFIN Accounts
-    ┏━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
-    ┃ Institution    ┃ Account            ┃ Balance   ┃ Account ID    ┃
-    ┡━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
-    │ SimpleFIN Demo │ SimpleFIN Savings  │ 114125.50 │ Demo Savings  │
-    │ SimpleFIN Demo │ SimpleFIN Checking │ 24302.22  │ Demo Checking │
-    └────────────────┴────────────────────┴───────────┴───────────────┘
+<!-- [[[cog
+import cog
+from simplefin import cli
+from click.testing import CliRunner
+runner = CliRunner()
+result = runner.invoke(cli, ["accounts"])
+cog.out(
+    "```\n❯ simplefin accounts\n{}```".format(result.output)
+)
+]]] -->
+```
+❯ simplefin accounts
+                        SimpleFIN Accounts                         
+┏━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
+┃ Institution    ┃ Account            ┃ Balance   ┃ Account ID    ┃
+┡━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
+│ SimpleFIN Demo │ SimpleFIN Savings  │ 115525.50 │ Demo Savings  │
+│ SimpleFIN Demo │ SimpleFIN Checking │ 26134.42  │ Demo Checking │
+└────────────────┴────────────────────┴───────────┴───────────────┘
+```
+<!-- [[[end]]] -->
 
 #### Get transactions for an account
 
 `simplefin transactions ACCOUNT_ID [--format FORMAT] [--lookback-days INTEGER]`
-
-    ❯ simplefin transactions "Demo Savings"
-            Transactions for Demo Savings
-    ┏━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┓
-    ┃ Date        ┃ Payee               ┃ Amount ┃
-    ┡━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━┩
-    │ 10 Jan 2025 │ John's Fishin Shack │ -50.00 │
-    │ 10 Jan 2025 │ Grocery store       │ -90.00 │
-    │ 11 Jan 2025 │ John's Fishin Shack │ -55.50 │
-    │ 11 Jan 2025 │ Grocery store       │ -85.50 │
-    └─────────────┴─────────────────────┴────────┘
+<!-- [[[cog
+import cog
+from simplefin import cli
+from click.testing import CliRunner
+runner = CliRunner()
+result = runner.invoke(cli, ["transactions", "Demo Savings", "--lookback-days", 1])
+cog.out(
+    "```\n❯ simplefin transactions \"Demo Savings\"\n{}```".format(result.output)
+)
+]]] -->
+```
+❯ simplefin transactions "Demo Savings"
+         Transactions for Demo Savings         
+┏━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━┓
+┃ Date        ┃ Payee               ┃ Amount  ┃
+┡━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━┩
+│ 01 Feb 2025 │ You                 │ 1960.00 │
+│ 01 Feb 2025 │ John's Fishin Shack │ -05.50  │
+│ 01 Feb 2025 │ Grocery store       │ -135.50 │
+└─────────────┴─────────────────────┴─────────┘
+```
+<!-- [[[end]]] -->
 
 ##### JSON output
 
 We convert the posted and transacted_at, if provided, values into ISO strings.
 
-    ❯ simplefin transactions "Demo Savings" --format json
-    [
-        {
-            "id": "1736496000",
-            "posted": "2025-01-10T08:00:00+00:00",
-            "amount": "-50.00",
-            "description": "Fishing bait",
-            "payee": "John's Fishin Shack",
-            "memo": "JOHNS FISHIN SHACK BAIT"
-        },
-        {
-            "id": "1736524800",
-            "posted": "2025-01-10T16:00:00+00:00",
-            "amount": "-90.00",
-            "description": "Grocery store",
-            "payee": "Grocery store",
-            "memo": "LOCAL GROCER STORE #1133"
-        },
-        {
-            "id": "1736582400",
-            "posted": "2025-01-11T08:00:00+00:00",
-            "amount": "-55.50",
-            "description": "Fishing bait",
-            "payee": "John's Fishin Shack",
-            "memo": "JOHNS FISHIN SHACK BAIT"
-        },
-        {
-            "id": "1736611200",
-            "posted": "2025-01-11T16:00:00+00:00",
-            "amount": "-85.50",
-            "description": "Grocery store",
-            "payee": "Grocery store",
-            "memo": "LOCAL GROCER STORE #1133"
-        }
-    ]
+<!-- [[[cog
+import cog
+from simplefin import cli
+from click.testing import CliRunner
+runner = CliRunner()
+result = runner.invoke(cli, ["transactions", "Demo Savings", "--format", "json", "--lookback-days", 1])
+cog.out(
+    "```\n❯ simplefin transactions \"Demo Savings\" --format json\n{}```".format(result.output)
+)
+]]] -->
+```
+❯ simplefin transactions "Demo Savings" --format json
+[
+    {
+        "id": "1738382400",
+        "posted": "2025-02-01T04:00:00+00:00",
+        "amount": "1960.00",
+        "description": "Pay day!",
+        "payee": "You",
+        "memo": "PAY DAY - FROM YER JOB"
+    },
+    {
+        "id": "1738396800",
+        "posted": "2025-02-01T08:00:00+00:00",
+        "amount": "-05.50",
+        "description": "Fishing bait",
+        "payee": "John's Fishin Shack",
+        "memo": "JOHNS FISHIN SHACK BAIT"
+    },
+    {
+        "id": "1738425600",
+        "posted": "2025-02-01T16:00:00+00:00",
+        "amount": "-135.50",
+        "description": "Grocery store",
+        "payee": "Grocery store",
+        "memo": "LOCAL GROCER STORE #1133"
+    }
+]
+```
+<!-- [[[end]]] -->
