@@ -19,6 +19,9 @@ categories:
 
 category-template: "### $TITLE"
 
+exclude-labels:
+  - 'skip-changelog'
+
 template: |
   ## What's Changed
 
