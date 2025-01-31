@@ -1,16 +1,12 @@
 import logging
 from base64 import b64decode
-from datetime import date, datetime, timezone
+from datetime import date, datetime
 from functools import wraps
 from typing import Optional
 
 import httpx
 
 logger = logging.getLogger(__name__)
-
-
-def epoch_to_datetime(epoch: int) -> datetime:
-    return datetime.fromtimestamp(epoch, tz=timezone.utc)
 
 
 # TODO: Custom exception, if still required?
@@ -71,17 +67,11 @@ class SimpleFINClient(object):
         )
         response.raise_for_status()
 
-        transactions = response.json()["accounts"][0]["transactions"]
+        # Include errors & holdings?
 
-        for transaction in transactions:
-            if "posted" in transaction.keys():
-                transaction["posted"] = epoch_to_datetime(transaction["posted"])
-            if "transacted_at" in transaction.keys():
-                transaction["transacted_at"] = epoch_to_datetime(
-                    transaction["transacted_at"]
-                )
+        resp = response.json()
 
-        return transactions
+        return resp
 
     @ensure_client_initialized
     def get_info(self):
