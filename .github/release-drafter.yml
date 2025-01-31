@@ -17,6 +17,8 @@ categories:
   - title: "Dependency Updates"
     labels: [dependencies]
 
+category-template: "### $TITLE"
+
 template: |
   ## What's Changed
 
