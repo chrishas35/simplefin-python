@@ -25,6 +25,8 @@ Examples below leverage the SimpleFIN Bridge Demo Access URL of `https://demo:de
 
 #### Get accounts
 
+`simplefin accounts [--format FORMAT]`
+
 <!-- [[[cog
 import cog
 from simplefin import cli
@@ -47,9 +49,63 @@ cog.out(
 ```
 <!-- [[[end]]] -->
 
+##### JSON output
+
+<!-- [[[cog
+import cog
+from simplefin import cli
+from click.testing import CliRunner
+runner = CliRunner()
+result = runner.invoke(cli, ["accounts", "--format", "json"])
+cog.out(
+    "```\n❯ simplefin accounts --format json\n{}```".format(result.output)
+)
+]]] -->
+```
+❯ simplefin accounts --format json
+[
+    {
+        "org": {
+            "domain": "beta-bridge.simplefin.org",
+            "sfin-url": "https://beta-bridge.simplefin.org/simplefin",
+            "name": "SimpleFIN Demo",
+            "url": "https://beta-bridge.simplefin.org",
+            "id": "simplefin.demoorg"
+        },
+        "id": "Demo Savings",
+        "name": "SimpleFIN Savings",
+        "currency": "USD",
+        "balance": "115525.50",
+        "available-balance": "115525.50",
+        "balance-date": 1738368000,
+        "transactions": [],
+        "holdings": []
+    },
+    {
+        "org": {
+            "domain": "beta-bridge.simplefin.org",
+            "sfin-url": "https://beta-bridge.simplefin.org/simplefin",
+            "name": "SimpleFIN Demo",
+            "url": "https://beta-bridge.simplefin.org",
+            "id": "simplefin.demoorg"
+        },
+        "id": "Demo Checking",
+        "name": "SimpleFIN Checking",
+        "currency": "USD",
+        "balance": "26134.42",
+        "available-balance": "26134.42",
+        "balance-date": 1738368000,
+        "transactions": [],
+        "holdings": []
+    }
+]
+```
+<!-- [[[end]]] -->
+
 #### Get transactions for an account
 
 `simplefin transactions ACCOUNT_ID [--format FORMAT] [--lookback-days INTEGER]`
+
 <!-- [[[cog
 import cog
 from simplefin import cli
