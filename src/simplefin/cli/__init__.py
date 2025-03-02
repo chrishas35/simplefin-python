@@ -1,6 +1,7 @@
 import datetime
 import json
 import os
+from typing import Optional
 
 # from datetime import date
 import click
@@ -83,7 +84,12 @@ def accounts(format: str) -> None:
     "--lookback-days",
     type=int,
     default=7,
-    help="Number of days to look back for transactions",
+    help="Number of days to look back for transactions (default: 7, ignored if --start-date is provided)",
+)
+@click.option(
+    "--start-date",
+    type=click.DateTime(formats=["%Y-%m-%d"]),
+    help="Specific start date for transactions (YYYY-MM-DD format). Takes precedence over lookback-days.",
 )
 @click.option(
     "--format",
@@ -91,9 +97,20 @@ def accounts(format: str) -> None:
     default="table",
     help="Specify output format",
 )
-def transactions(account_id: str, format: str, lookback_days: int) -> None:
+def transactions(
+    account_id: str,
+    format: str,
+    lookback_days: int,
+    start_date: Optional[datetime.datetime],
+) -> None:
     c = SimpleFINClient(access_url=os.getenv("SIMPLEFIN_ACCESS_URL"))
-    start_dt = datetime.date.today() - datetime.timedelta(days=lookback_days)
+
+    # Use the specific start_date if provided, otherwise calculate from lookback days
+    if start_date:
+        start_dt = start_date.date()
+    else:
+        start_dt = datetime.date.today() - datetime.timedelta(days=lookback_days)
+
     resp = c.get_transactions(account_id, start_dt)
 
     console = Console()
