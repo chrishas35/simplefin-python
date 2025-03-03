@@ -92,6 +92,11 @@ def accounts(format: str) -> None:
     help="Specific start date for transactions (YYYY-MM-DD format). Takes precedence over lookback-days.",
 )
 @click.option(
+    "--end-date",
+    type=click.DateTime(formats=["%Y-%m-%d"]),
+    help="Specific end date for transactions (YYYY-MM-DD format). If provided, --start-date must also be provided.",
+)
+@click.option(
     "--format",
     type=click.Choice(["json", "table"], case_sensitive=False),
     default="table",
@@ -102,8 +107,15 @@ def transactions(
     format: str,
     lookback_days: int,
     start_date: Optional[datetime.datetime],
+    end_date: Optional[datetime.datetime],
 ) -> None:
     c = SimpleFINClient(access_url=os.getenv("SIMPLEFIN_ACCESS_URL"))
+
+    # Validate that if end_date is provided, start_date is also provided
+    if end_date and not start_date:
+        raise click.UsageError(
+            "If --end-date is provided, --start-date must also be provided."
+        )
 
     # Use the specific start_date if provided, otherwise calculate from lookback days
     if start_date:
@@ -111,7 +123,14 @@ def transactions(
     else:
         start_dt = datetime.date.today() - datetime.timedelta(days=lookback_days)
 
-    resp = c.get_transactions(account_id, start_dt)
+    # Use provided end_date or default to today
+    end_dt = end_date.date() if end_date else datetime.date.today()
+
+    # Validate that end_date is not before start_date
+    if end_dt < start_dt:
+        raise click.UsageError("End date cannot be before start date.")
+
+    resp = c.get_transactions(account_id, start_dt, end_dt)
 
     console = Console()
 

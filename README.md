@@ -104,7 +104,17 @@ cog.out(
 
 #### Get transactions for an account
 
-`simplefin transactions ACCOUNT_ID [--format FORMAT] [--lookback-days INTEGER]`
+    simplefin transactions [OPTIONS] ACCOUNT_ID
+
+    Options:
+    --lookback-days INTEGER  Number of days to look back for transactions
+                            (default: 7, ignored if --start-date is provided)
+    --start-date [%Y-%m-%d]  Specific start date for transactions (YYYY-MM-DD
+                            format). Takes precedence over lookback-days.
+    --end-date [%Y-%m-%d]    Specific end date for transactions (YYYY-MM-DD
+                            format). If provided, --start-date must also be
+                            provided.
+    --format [json|table]    Specify output format
 
 <!-- [[[cog
 import cog
@@ -128,6 +138,14 @@ cog.out(
 └─────────────┴─────────────────────┴─────────┘
 ```
 <!-- [[[end]]] -->
+
+Transactions can also accept a custom lookback-days (default: 7), start date, or a start and end date.
+
+```
+❯ simplefin transactions --lookback-days 30 "Demo Savings"
+❯ simplefin transactions --start-date 2025-01-01 "Demo Savings" # End date defaults to today
+❯ simplefin transactions --start-date 2025-01-01 --end-date 2025-01-31 "Demo Savings"
+```
 
 ##### JSON output
 

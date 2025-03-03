@@ -59,11 +59,21 @@ class SimpleFINClient(object):
         return accounts[0] if accounts else None
 
     @ensure_client_initialized
-    def get_transactions(self, account_id: str, start_date: date):
+    def get_transactions(
+        self, account_id: str, start_date: date, end_date: Optional[date] = None
+    ):
+        # Use beginning of day (00:00:00) for the start date
         dt = datetime.combine(start_date, datetime.min.time())
+        params = {"account": account_id, "start-date": int(dt.timestamp())}
+
+        if end_date:
+            # Use end of day (23:59:59) for the end date to include the whole day
+            end_dt = datetime.combine(end_date, datetime.max.time())
+            params["end-date"] = int(end_dt.timestamp())
+
         response = self.client.get(
             "/accounts",
-            params={"account": account_id, "start-date": int(dt.timestamp())},
+            params=params,
         )
         response.raise_for_status()
 
