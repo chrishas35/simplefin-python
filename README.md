@@ -204,3 +204,52 @@ cog.out(
 }
 ```
 <!-- [[[end]]] -->
+
+#### Fetch all accounts to separate files
+
+`simplefin fetch --output-dir DIRECTORY [--lookback-days INTEGER]`
+
+Fetches all accounts with their transactions and saves each account to a separate JSON file. Files are organized hierarchically by institution and account name:
+
+```
+output-dir/
+  institution-domain/
+    account-name/
+      account-id_YYYY-MM-DD.json
+```
+
+This is useful for integration with tools like [beangulp](https://github.com/beancount/beangulp) that expect one file per account.
+
+```
+❯ simplefin fetch --output-dir ./simplefin-data --lookback-days 30
+Found 2 accounts
+  SimpleFIN Savings: 3 transactions -> beta-bridge.simplefin.org/SimpleFIN-Savings/Demo-Savings_2025-01-15.json
+  SimpleFIN Checking: 2 transactions -> beta-bridge.simplefin.org/SimpleFIN-Checking/Demo-Checking_2025-01-15.json
+
+Wrote 2 account files to ./simplefin-data
+```
+
+Each JSON file contains the full account metadata plus transactions:
+
+```json
+{
+  "org": {
+    "domain": "beta-bridge.simplefin.org",
+    "name": "SimpleFIN Demo"
+  },
+  "id": "Demo Savings",
+  "name": "SimpleFIN Savings",
+  "currency": "USD",
+  "balance": "115525.50",
+  "balance-date": 1738368000,
+  "transactions": [
+    {
+      "id": "1738382400",
+      "posted": "2025-02-01T12:00:00+00:00",
+      "amount": "-50.00",
+      "description": "Fishing bait",
+      "payee": "John's Fishin Shack"
+    }
+  ]
+}
+```

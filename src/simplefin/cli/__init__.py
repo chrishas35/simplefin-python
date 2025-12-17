@@ -127,5 +127,87 @@ def info() -> None:
     pprint(info)
 
 
+@cli.command()
+@click.option(
+    "--output-dir",
+    type=click.Path(file_okay=False, dir_okay=True),
+    required=True,
+    help="Directory to output per-account JSON files",
+)
+@click.option(
+    "lookback_days",
+    "--lookback-days",
+    type=int,
+    default=30,
+    help="Number of days to look back for transactions (default: 30)",
+)
+def fetch(output_dir: str, lookback_days: int) -> None:
+    """Fetch all accounts with transactions to separate JSON files.
+
+    Creates one JSON file per account in the output directory, organized by
+    institution and account name:
+
+        <output-dir>/<institution-domain>/<account-name>/<account-id>_<date>.json
+
+    This structure is human-navigable and preserves history. It's useful for
+    integration with tools like beangulp that expect one file per account.
+    """
+    import pathlib
+
+    def sanitize_path(name: str) -> str:
+        """Sanitize a string for use as a directory/file name."""
+        safe = "".join(ch if ch.isalnum() or ch in "-_." else "-" for ch in name)
+        # Collapse multiple dashes and strip leading/trailing dashes
+        while "--" in safe:
+            safe = safe.replace("--", "-")
+        return safe.strip("-")
+
+    c = SimpleFINClient(access_url=os.getenv("SIMPLEFIN_ACCESS_URL"))
+    console = Console()
+
+    # Get list of accounts (with balance info but no transactions)
+    accounts = c.get_accounts()
+    console.print(f"Found {len(accounts)} accounts")
+
+    # Create output directory
+    output_path = pathlib.Path(output_dir)
+    output_path.mkdir(parents=True, exist_ok=True)
+
+    # Fetch transactions for each account
+    start_dt = datetime.date.today() - datetime.timedelta(days=lookback_days)
+    today_str = datetime.date.today().isoformat()
+
+    for account in accounts:
+        account_id = account["id"]
+        account_name = account["name"]
+        org_domain = account.get("org", {}).get("domain", "unknown")
+
+        # Fetch transactions for this account
+        # get_transactions returns a list of transaction dicts
+        transactions = c.get_transactions(account_id, start_dt)
+
+        # Merge account metadata with transactions
+        account_data = account.copy()
+        account_data["transactions"] = transactions if isinstance(transactions, list) else []
+
+        # Build directory structure: <institution>/<account-name>/
+        inst_dir = output_path / sanitize_path(org_domain)
+        acct_dir = inst_dir / sanitize_path(account_name)
+        acct_dir.mkdir(parents=True, exist_ok=True)
+
+        # Filename: <account-id>_<date>.json
+        filename = f"{account_id}_{today_str}.json"
+        filepath = acct_dir / filename
+
+        with open(filepath, "w") as f:
+            json.dump(account_data, f, indent=2, cls=DateTimeEncoder)
+
+        txn_count = len(account_data.get("transactions", []))
+        rel_path = filepath.relative_to(output_path)
+        console.print(f"  {account_name}: {txn_count} transactions -> {rel_path}")
+
+    console.print(f"\nWrote {len(accounts)} account files to {output_dir}")
+
+
 if __name__ == "__main__":
     cli()
