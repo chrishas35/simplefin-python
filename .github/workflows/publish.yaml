@@ -19,7 +19,7 @@ jobs:
           fetch-depth: 0
       - if: github.repository == 'chrishas35/simplefin-python-test'
         run: sed -i -e 's/name = "simplefin"/name = "simplefin-test"/g' pyproject.toml
-      - uses: hynek/build-and-inspect-python-package@b5076c307dc91924a82ad150cdd1533b444d3310 # v2
+      - uses: hynek/build-and-inspect-python-package@d44ca7d91762de7a7d5436ddae667c6da6d1c3df # v2
   
   publish-to-pypi:
     name: Publish to PyPI
